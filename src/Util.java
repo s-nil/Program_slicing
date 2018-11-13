@@ -1,5 +1,8 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.HashMap;
 
 
 public class Util {
@@ -38,5 +41,26 @@ public class Util {
 		}
 	}
 	
+	int timer = 0;
+	HashMap filenames = new HashMap();
+	
+	public void log(String filename, String msg) {
+		
+		BufferedWriter out;
+		try {
+			out = (BufferedWriter)filenames.get(filename);
+			if(out == null){
+				out = new BufferedWriter(new FileWriter(filename));
+				filenames.put(filename, out);
+			}else {
+				out = new BufferedWriter(new FileWriter(filename, true));
+			}
+			out.write("\n" + (++timer) + "\t");
+			out.write(msg);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
