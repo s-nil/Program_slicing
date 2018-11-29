@@ -93,7 +93,7 @@ public class preProcess {
 	}
 
 	public void print_body(Body b) {
-		System.out.println(b);
+		//System.out.println(b);
 		System.out.println("\nPrinting Body of " + b.getMethod().getSignature() + "\n");
 		PatchingChain units = b.getUnits();
 		Iterator it = units.iterator();
