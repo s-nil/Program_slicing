@@ -7,19 +7,25 @@ public class test1 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int a=10;
-		int d =0;
-		a = a + 10;
-		int x = a * 10;
-		int y = 0;
-		int b = y + 10;
-		if(a<200){
-			a = a+3;
-			d = x*0;
-		}
-		y = a + d + b; 
 		
+		int a=10;
+		int x,y;
+		x = a + 10;
+		x = x+1;
+		y = x;
+		if(x>10){
+			x = y +1;
+		}
+		else {
+			a = x;
+		}
+		a= new test1().name(a);
+		System.out.println(a);
+		
+	}
+	
+	public int name(int a) {
+		return a;
 	}
 	
 }

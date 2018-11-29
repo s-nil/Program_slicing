@@ -6,26 +6,26 @@ import java.util.HashMap;
 
 
 public class Util {
-	
+
 	private static Util o = null;
 	public String sc_className, sc_methodName;
 	public int sc_line;
-	
+
 	private Util() {
-		
+
 	}
-	
+
 	public static Util v() {
 		if (o == null) {
 			o = new Util();
 		}
-		return o;		
+		return o;
 	}
-	
+
 	public void read_sc() {
 		String filename = "sc.txt";
 		BufferedReader out;
-		
+
 		try {
 			out = new BufferedReader(new FileReader(filename));
 			if(out == null){
@@ -40,12 +40,12 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
-	
+
 	int timer = 0;
 	HashMap filenames = new HashMap();
-	
+
 	public void log(String filename, String msg) {
-		
+
 		BufferedWriter out;
 		try {
 			out = (BufferedWriter)filenames.get(filename);

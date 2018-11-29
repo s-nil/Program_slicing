@@ -19,7 +19,7 @@ public class formalInAssignment extends JAssignStmt{
 	}
 	
 	public String toString() {
-		return "FI:"+super.toString();
+		return "FormalIn:"+super.toString();
 		
 	}
 }
