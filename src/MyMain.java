@@ -15,63 +15,53 @@ import soot.options.Options;
 
 public class MyMain {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		inst = new MyMain();
 		inst.run(args);
-		System.out.println("aa");
 	}
 
-	private void run(String[] args) {
+	private int run(String[] args) {
 		try {
 			String[] cmdLineArgs;
-			Date start, finish;
-			
 			cmdLineArgs = args;
-			start = new Date();
 			
 			try {
-				Timers.v().totalTimer.start();
-				
 				processCmdLine(cmdLineArgs);
 				
 				Util.v().read_sc();
-				
-				G.v().out.println("Soot has started on "+start);
-				
 				Scene.v().loadNecessaryClasses();
-				
-				
+
 				Options.v().set_output_format(1);
 				Options.v().setPhaseOption("jb.ls", "enabled:true");
 				Options.v().setPhaseOption("jb", "use-original-names:true");
 			
-				//int defFormat = Options.v().output_format();
-				//System.out.println(defFormat);
 				PackManager.v().runPacks();
 				
-				/*Iterator itr = reachableClasses();
-				while (itr.hasNext()) {
-					SootClass scl = (SootClass)itr.next();
-					System.out.println(scl.getName());
-					
-				}*/
+				if(reachableClasses().getName().equals(Util.v().sc_className)){
+					preProcess.v().process(reachableClasses());
+					new PDG(reachableClasses());
 				
-			} catch (Exception e) {
-				// TODO: handle exception
+					new reconstructCFG(reachableClasses());
+				}
+				else {
+					System.err.println("Different class in slicing criteria.");
+				}
+				
+			} catch (CompilationDeathException e) {
+				if (e.getStatus() == CompilationDeathException.COMPILATION_ABORTED) {
+					System.out.println("Compilation failed : " + e.getMessage());
+				}
+				return e.getStatus();
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+			return CompilationDeathException.COMPILATION_SUCCEEDED;
+		} catch (OutOfMemoryError e) {
+			throw e;
 		}
 	}
 
-	private Iterator<SootClass> reachableClasses() {
-
-        return Scene.v().getApplicationClasses().iterator();
-
-	}
+	private SootClass reachableClasses() {
+		return Scene.v().getApplicationClasses().getFirst();
+    }
 	
 	private void processCmdLine(String[] args) {
 
@@ -111,17 +101,12 @@ public class MyMain {
         }
 
         if (args.length == 0 || Options.v().version()) {
-            printVersion();
             throw new CompilationDeathException(CompilationDeathException.COMPILATION_SUCCEEDED);
         }
 
         postCmdLineCheck();
     }
 	
-	private void printVersion() {
-		
-	}
-
 	private void postCmdLineCheck() {
 		if (Options.v().classes().isEmpty() && Options.v().process_dir().isEmpty()) {
 			throw new CompilationDeathException(
@@ -130,19 +115,5 @@ public class MyMain {
 		}
 	}
 
-	private void exitCompilation(int status) {
-        exitCompilation(status, "");
-    }
-
-    private void exitCompilation(int status, String msg) {
-        if(status == CompilationDeathException.COMPILATION_ABORTED) {
-                G.v().out.println("compilation failed: "+msg);
-        }
-    }
-    
 	private static MyMain inst;
-	
-	private MyMain() {
-			
-	}
 }
